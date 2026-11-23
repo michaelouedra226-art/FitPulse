@@ -38,17 +38,30 @@ jobs:
           # Install required packages
           sdkmanager "platforms;android-35" "build-tools;35.0.0" "platform-tools"
 
-      - name: Generate Gradle wrapper
+      - name: Download Gradle
         run: |
-          # Install Gradle from the GitHub distribution (not from local system)
           wget -q https://services.gradle.org/distributions/gradle-8.10.2-bin.zip
           unzip -q gradle-8.10.2-bin.zip
           rm gradle-8.10.2-bin.zip
-          # Generate wrapper with the downloaded Gradle
-          ./gradle-8.10.2/bin/gradle wrapper --gradle-version 8.10.2
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x ./gradlew
+      - name: Generate Gradle wrapper
+        run: |
+          # Set up the gradle wrapper using the downloaded Gradle
+          GRADLE_HOME=$(pwd)/gradle-8.10.2
+          # Create the wrapper properties file
+          mkdir -p gradle/wrapper
+          cat > gradle/wrapper/gradle-wrapper.properties <<EOF
+          distributionBase=GRADLE_USER_HOME
+          distributionPath=wrapper/dists
+          distributionUrl=https\://services.gradle.org/distributions/gradle-8.10.2-bin.zip
+          zipStoreBase=GRADLE_USER_HOME
+          zipStorePath=wrapper/dists
+          EOF
+          # Download the wrapper JAR
+          wget -q https://raw.githubusercontent.com/gradle/gradle/v8.10.2/gradle/wrapper/gradle-wrapper.jar -O gradle/wrapper/gradle-wrapper.jar
+          # Create the gradlew script
+          wget -q https://raw.githubusercontent.com/gradle/gradle/v8.10.2/gradlew -O gradlew
+          chmod +x gradlew
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug --no-daemon
