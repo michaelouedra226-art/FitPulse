@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -11,7 +13,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -26,23 +27,31 @@ import com.example.fitpulse.ui.theme.*
 // ─── Bottom Tab ───────────────────────────────────────────────────────────────
 enum class Tab { DASHBOARD, WORKOUTS, PROGRESS, PROFILE }
 
+data class TabItem(val tab: Tab, val icon: Icons.Default, val label: String)
+
 @Composable
 fun BottomBar(current: Tab, onTab: (Tab) -> Unit) {
     val items = listOf(
-        Tab.DASHBOARD to (Icons.Default.Home to "Accueil"),
-        Tab.WORKOUTS to (Icons.Default.FitnessCenter to "Séances"),
-        Tab.PROGRESS to (Icons.Default.TrendingUp to "Progrès"),
-        Tab.PROFILE to (Icons.Default.Person to "Profil")
+        TabItem(Tab.DASHBOARD, Icons.Default.Home, "Accueil"),
+        TabItem(Tab.WORKOUTS, Icons.Default.FitnessCenter, "Séances"),
+        TabItem(Tab.PROGRESS, Icons.Default.TrendingUp, "Progrès"),
+        TabItem(Tab.PROFILE, Icons.Default.Person, "Profil")
     )
     Box(
         Modifier
             .fillMaxWidth()
             .background(BgMid)
-            .padding(bottom = 8.dp, top = 8.dp, start = 12.dp, end = 12.dp)
+            .padding(horizontal = 12.dp, vertical = 8.dp)
     ) {
-        Row(Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(Color(0x1FFFFFFF)).padding(8.dp)) {
-            items.forEach { (tab, (icon, label)) ->
-                val active = tab == current
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(20.dp))
+                .background(Color(0x1FFFFFFF))
+                .padding(8.dp)
+        ) {
+            items.forEach { item ->
+                val active = item.tab == current
                 Box(
                     Modifier
                         .weight(1f)
@@ -57,14 +66,14 @@ fun BottomBar(current: Tab, onTab: (Tab) -> Unit) {
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(
-                            icon,
+                            item.icon,
                             null,
                             tint = if (active) NeonGreen else TextLo,
                             modifier = Modifier.size(22.dp)
                         )
                         Spacer(Modifier.height(4.dp))
                         Text(
-                            label,
+                            item.label,
                             color = if (active) NeonGreen else TextLo,
                             fontSize = 10.sp,
                             fontWeight = if (active) FontWeight.Bold else FontWeight.Medium
@@ -87,7 +96,6 @@ class MainActivity : ComponentActivity() {
 
                 Surface(Modifier.fillMaxSize()) {
                     Box(Modifier.fillMaxSize()) {
-                        // Content
                         NavHost(nav, startDestination = "dashboard", Modifier.fillMaxSize()) {
                             composable("dashboard") {
                                 DashboardScreen(
@@ -122,14 +130,13 @@ class MainActivity : ComponentActivity() {
                             }
                         }
 
-                        // Bottom Bar
                         Box(Modifier.align(Alignment.BottomCenter)) {
                             BottomBar(current = tab) { newTab ->
                                 when (newTab) {
-                                    Tab.DASHBOARD -> { nav.navigate("dashboard") { popUpTo(0) { inclusive = false } } }
-                                    Tab.WORKOUTS -> { nav.navigate("workouts") }
-                                    Tab.PROGRESS -> { nav.navigate("progress") }
-                                    Tab.PROFILE -> { nav.navigate("profile") }
+                                    Tab.DASHBOARD -> nav.navigate("dashboard") { popUpTo(0) { inclusive = false } }
+                                    Tab.WORKOUTS -> nav.navigate("workouts")
+                                    Tab.PROGRESS -> nav.navigate("progress")
+                                    Tab.PROFILE -> nav.navigate("profile")
                                 }
                                 tab = newTab
                             }
