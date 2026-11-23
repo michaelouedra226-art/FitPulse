@@ -4,7 +4,6 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -196,7 +195,6 @@ fun ProgressRing(
     Box(modifier = modifier.size(size.dp), contentAlignment = Alignment.Center) {
         Canvas(modifier = Modifier.size(size.dp)) {
             val r = (size - strokeWidth) / 2f
-            // background ring
             drawArc(
                 color = Color.White.copy(alpha = 0.08f),
                 startAngle = -90f,
@@ -204,7 +202,6 @@ fun ProgressRing(
                 useCenter = false,
                 style = Stroke(strokeWidth = strokeWidth.dp.toPx(), cap = StrokeCap.Round)
             )
-            // progress ring
             drawArc(
                 color = color,
                 startAngle = -90f,
@@ -235,7 +232,12 @@ fun EmptyState(title: String, subtitle: String, modifier: Modifier = Modifier) {
         Spacer(Modifier.height(12.dp))
         Text(title, style = MaterialTheme.typography.titleLarge, color = TextHi, fontWeight = FontWeight.Bold)
         Spacer(Modifier.height(4.dp))
-        Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = TextMid, textAlign = TextAlign.Center)
+        Text(
+            subtitle,
+            style = MaterialTheme.typography.bodyMedium,
+            color = TextMid,
+            textAlign = TextAlign.Center
+        )
     }
 }
 
