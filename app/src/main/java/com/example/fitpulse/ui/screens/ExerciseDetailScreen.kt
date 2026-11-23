@@ -1,6 +1,9 @@
 package com.example.fitpulse.ui.screens
 
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -8,7 +11,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.fitpulse.ExerciseViewModel
@@ -20,33 +26,91 @@ import com.example.fitpulse.ui.theme.*
 fun ExerciseDetailScreen(onBack: () -> Unit, exerciseId: Long) {
     val vm: ExerciseViewModel = viewModel()
     val ex = vm.getById(exerciseId)
-    Scaffold(containerColor = DarkBg, topBar = {
-        TopAppBar(title = { Text(ex?.name ?: "Exercice", color = TextPrimary) }, navigationIcon = {
-            IconButton(onClick = onBack) { Icon(Icons.Default.ArrowBack, contentDescription = null, tint = TextPrimary) }
-        }, colors = TopAppBarDefaults.topAppBarColors(containerColor = DarkBg))
-    }) { pad ->
+
+    Scaffold(
+        containerColor = BgDeep,
+        topBar = {
+            TopAppBar(
+                title = { Text(ex?.name ?: "Exercice", color = TextHi, fontWeight = FontWeight.Bold) },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.Default.ArrowBack, null, tint = TextMid)
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = BgDeep)
+            )
+        }
+    ) { pad ->
         if (ex == null) {
-            Box(Modifier.padding(pad).fillMaxSize(), contentAlignment = Alignment.Center) { Text("Exercice introuvable", color = TextSecondary) }
+            Box(Modifier.padding(pad).fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text("Exercice introuvable", color = TextMid)
+            }
         } else {
             val infinite = rememberInfiniteTransition(label = "anim")
-            val scale by infinite.animateFloat(initialValue = 0.9f, targetValue = 1.1f, animationSpec = infiniteRepeatable(tween(800), RepeatMode.Reverse), label = "scale")
-            Column(Modifier.padding(pad).padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                GlassCard(Modifier.fillMaxWidth().height(200.dp)) {
-                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text("▶ ${ex.animationRes}", color = NeonGreen, style = MaterialTheme.typography.headlineMedium, modifier = Modifier.scale(scale))
+            val pulse by infinite.animateFloat(
+                initialValue = 0.92f,
+                targetValue = 1.08f,
+                animationSpec = infiniteRepeatable(tween(900), RepeatMode.Reverse),
+                label = "pulse"
+            )
+
+            LazyColumn(
+                modifier = Modifier.padding(pad).padding(horizontal = 20.dp),
+                verticalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                // Animated Hero
+                item {
+                    GlassCard(Modifier.fillMaxWidth().height(180.dp)) {
+                        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            Text(
+                                "▶ ${ex.animationRes}",
+                                color = NeonGreen,
+                                style = MaterialTheme.typography.headlineMedium,
+                                fontWeight = FontWeight.Black,
+                                modifier = Modifier.scale(pulse)
+                            )
+                        }
                     }
                 }
-                GlassCard(Modifier.fillMaxWidth()) {
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text(ex.muscleGroup, style = MaterialTheme.typography.labelLarge, color = NeonCyan)
-                        Text("${ex.difficulty} • ${ex.durationSec}s effort • ${ex.restSec}s repos • ${ex.caloriesPerMin} kcal/min", style = MaterialTheme.typography.bodySmall, color = TextSecondary)
-                        Text(ex.description, style = MaterialTheme.typography.bodyMedium, color = TextPrimary)
+
+                // Tags
+                item {
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Tag(ex.muscleGroup, NeonCyan)
+                        Tag(ex.difficulty, NeonPurple)
+                        Tag("${ex.durationSec}s", NeonAmber)
+                        Tag("${ex.caloriesPerMin} kcal/min", NeonRed)
                     }
                 }
-                SectionHeader("Instructions")
-                ex.instructions.forEachIndexed { i, step ->
+
+                // Description
+                item {
                     GlassCard(Modifier.fillMaxWidth()) {
-                        Text("${i + 1}. $step", color = TextPrimary)
+                        Text(ex.description, style = MaterialTheme.typography.bodyLarge, color = TextHi, fontWeight = FontWeight.Normal)
+                    }
+                }
+
+                // Instructions
+                item {
+                    SectionHeader("Instructions", accent = true)
+                }
+                ex.instructions.forEachIndexed { i, step ->
+                    item {
+                        GlassCard(Modifier.fillMaxWidth()) {
+                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                                Box(
+                                    Modifier
+                                        .size(28.dp)
+                                        .clip(RoundedCornerShape(50))
+                                        .background(NeonGreen.copy(alpha = 0.15f))
+                                        .border(1.dp, NeonGreen.copy(alpha = 0.3f), RoundedCornerShape(50)),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text("${i + 1}", color = NeonGreen, fontWeight = FontWeight.Black, fontSize = 12.sp)
+                                }
+                                Text(step, color = TextHi, style = MaterialTheme.typography.bodyMedium)
+                            }
+                        }
                     }
                 }
             }

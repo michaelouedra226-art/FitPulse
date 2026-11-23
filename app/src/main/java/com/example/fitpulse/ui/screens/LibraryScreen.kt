@@ -23,31 +23,64 @@ fun LibraryScreen(onBack: () -> Unit, onExercise: (Long) -> Unit = {}) {
     val exercises by vm.exercises.collectAsState()
     var query by remember { mutableStateOf("") }
     val filtered = remember(query, exercises) {
-        if (query.isBlank()) exercises else exercises.filter { it.name.contains(query, true) || it.muscleGroup.contains(query, true) || it.category.contains(query, true) }
+        if (query.isBlank()) exercises
+        else exercises.filter {
+            it.name.contains(query, true) ||
+            it.muscleGroup.contains(query, true) ||
+            it.category.contains(query, true)
+        }
     }
     val categories = remember(filtered) { filtered.map { it.category }.distinct() }
 
-    Scaffold(containerColor = DarkBg, topBar = {
-        TopAppBar(title = { Text("Bibliothèque", color = TextPrimary) }, navigationIcon = {
-            IconButton(onClick = onBack) { Icon(Icons.Default.ArrowBack, contentDescription = null, tint = TextPrimary) }
-        }, colors = TopAppBarDefaults.topAppBarColors(containerColor = DarkBg))
-    }) { pad ->
-        Column(Modifier.padding(pad).padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            OutlinedTextField(value = query, onValueChange = { query = it }, label = { Text("Rechercher un exercice") }, leadingIcon = { Icon(Icons.Default.Search, null) }, modifier = Modifier.fillMaxWidth(), colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = NeonGreen, unfocusedBorderColor = DarkBorder, focusedLabelColor = NeonGreen, unfocusedLabelColor = TextSecondary))
+    Scaffold(
+        containerColor = BgDeep,
+        topBar = {
+            TopAppBar(
+                title = { Text("Bibliothèque", color = TextHi, fontWeight = FontWeight.Bold) },
+                navigationIcon = {
+                    IconButton(onBack) { Icon(Icons.Default.ArrowBack, null, tint = TextMid) }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = BgDeep)
+            )
+        }
+    ) { pad ->
+        Column(Modifier.padding(pad).padding(horizontal = 20.dp)) {
+            OutlinedTextField(
+                value = query,
+                onValueChange = { query = it },
+                label = { Text("Rechercher un exercice") },
+                leadingIcon = { Icon(Icons.Default.Search, null, tint = TextMid) },
+                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = NeonGreen,
+                    unfocusedBorderColor = BorderGlass,
+                    focusedLabelColor = NeonGreen,
+                    unfocusedLabelColor = TextMid,
+                    focusedLeadingIconColor = NeonGreen
+                )
+            )
             LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 categories.forEach { cat ->
-                    item { SectionHeader(cat) }
+                    item { SectionHeader(cat, accent = true) }
                     items(filtered.filter { it.category == cat }) { ex ->
                         GlassCard(Modifier.fillMaxWidth()) {
                             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                                 Column(Modifier.weight(1f)) {
-                                    Text(ex.name, style = MaterialTheme.typography.titleMedium, color = TextPrimary)
-                                    Text("${ex.muscleGroup} • ${ex.difficulty} • ${ex.durationSec}s", style = MaterialTheme.typography.bodySmall, color = TextSecondary)
+                                    Text(ex.name, style = MaterialTheme.typography.titleLarge, color = TextHi, fontWeight = FontWeight.Bold)
+                                    Spacer(Modifier.height(4.dp))
+                                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                        Tag(ex.muscleGroup, NeonCyan)
+                                        Tag("${ex.difficulty}", NeonPurple)
+                                        Tag("${ex.durationSec}s", NeonAmber)
+                                    }
                                 }
                                 NeonButton("Voir", { onExercise(ex.id) }, Modifier.height(36.dp), NeonCyan)
                             }
                         }
                     }
+                }
+                if (filtered.isEmpty()) {
+                    item { EmptyState("Aucun résultat", "Essaie un autre mot-clé") }
                 }
             }
         }
