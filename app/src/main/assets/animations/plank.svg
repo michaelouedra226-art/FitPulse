@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120" width="200" height="120">
+  <style>
+    .breath { animation: breath 2s ease-in-out infinite; }
+    @keyframes breath { 0%,100% { opacity: 0.6; } 50% { opacity: 1; } }
+  </style>
+  <rect x="0" y="0" width="200" height="120" fill="#0B0F1A"/>
+  <g class="breath">
+    <circle cx="40" cy="50" r="10" fill="#3DFF8F"/>
+    <line x1="40" y1="60" x2="170" y2="60" stroke="#4DD9FF" stroke-width="6" stroke-linecap="round"/>
+    <line x1="40" y1="60" x2="40" y2="90" stroke="#4DD9FF" stroke-width="6" stroke-linecap="round"/>
+    <line x1="170" y1="60" x2="170" y2="90" stroke="#4DD9FF" stroke-width="6" stroke-linecap="round"/>
+  </g>
+  <text x="100" y="115" text-anchor="middle" fill="#9AA6C0" font-size="12">Planche</text>
+</svg>

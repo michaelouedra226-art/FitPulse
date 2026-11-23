@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120" width="200" height="120">
+  <style>
+    .sp { animation: sp 2s ease-in-out infinite; transform-origin: 100px 60px; }
+    @keyframes sp { 0%,100% { transform: rotate(0deg); } 50% { transform: rotate(3deg); } }
+  </style>
+  <rect x="0" y="0" width="200" height="120" fill="#0B0F1A"/>
+  <g class="sp">
+    <circle cx="60" cy="45" r="10" fill="#3DFF8F"/>
+    <line x1="60" y1="55" x2="150" y2="55" stroke="#4DD9FF" stroke-width="6" stroke-linecap="round"/>
+    <line x1="60" y1="55" x2="60" y2="95" stroke="#4DD9FF" stroke-width="6" stroke-linecap="round"/>
+    <line x1="150" y1="55" x2="150" y2="95" stroke="#4DD9FF" stroke-width="6" stroke-linecap="round"/>
+  </g>
+  <text x="100" y="115" text-anchor="middle" fill="#9AA6C0" font-size="12">Gainage latéral</text>
+</svg>
