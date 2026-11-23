@@ -3,9 +3,18 @@ package com.example.fitpulse.ui.components
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fitpulse.ui.theme.*
 
-// ─── Section Header ────────────────────────────────────────────────────────────
 @Composable
 fun SectionHeader(title: String, modifier: Modifier = Modifier, accent: Boolean = false) {
     Row(
@@ -29,7 +37,7 @@ fun SectionHeader(title: String, modifier: Modifier = Modifier, accent: Boolean 
             .padding(top = 20.dp, bottom = 12.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)
     ) {
         if (accent) {
             Box(
@@ -48,7 +56,6 @@ fun SectionHeader(title: String, modifier: Modifier = Modifier, accent: Boolean 
     }
 }
 
-// ─── Glass Card ────────────────────────────────────────────────────────────────
 @Composable
 fun GlassCard(
     modifier: Modifier = Modifier,
@@ -72,7 +79,6 @@ fun GlassCard(
     }
 }
 
-// ─── Stat Card ─────────────────────────────────────────────────────────────────
 @Composable
 fun StatCard(
     label: String,
@@ -91,7 +97,7 @@ fun StatCard(
                     .border(1.dp, accent.copy(alpha = 0.2f), RoundedCornerShape(10.dp)),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(icon, null, tint = accent, modifier = Modifier.size(20.dp))
+                androidx.compose.material3.Icon(icon, null, tint = accent, modifier = Modifier.size(20.dp))
             }
             Spacer(Modifier.width(12.dp))
             Column {
@@ -107,7 +113,6 @@ fun StatCard(
     }
 }
 
-// ─── Primary Button ────────────────────────────────────────────────────────────
 @Composable
 fun NeonButton(
     text: String,
@@ -129,9 +134,9 @@ fun NeonButton(
             .border(1.dp, color.copy(alpha = 0.4f), RoundedCornerShape(14.dp)),
         contentAlignment = Alignment.Center
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center) {
             if (icon != null) {
-                Icon(icon, null, tint = Color(0xFF041A0E), modifier = Modifier.size(18.dp))
+                androidx.compose.material3.Icon(icon, null, tint = Color(0xFF041A0E), modifier = Modifier.size(18.dp))
                 Spacer(Modifier.width(8.dp))
             }
             Text(
@@ -144,7 +149,6 @@ fun NeonButton(
     }
 }
 
-// ─── Ghost Button ──────────────────────────────────────────────────────────────
 @Composable
 fun GhostButton(
     text: String,
@@ -164,7 +168,6 @@ fun GhostButton(
     }
 }
 
-// ─── Chip / Tag ────────────────────────────────────────────────────────────────
 @Composable
 fun Tag(
     text: String,
@@ -182,7 +185,6 @@ fun Tag(
     }
 }
 
-// ─── Progress Ring ─────────────────────────────────────────────────────────────
 @Composable
 fun ProgressRing(
     progress: Float,
@@ -221,7 +223,6 @@ fun ProgressRing(
     }
 }
 
-// ─── Empty State ───────────────────────────────────────────────────────────────
 @Composable
 fun EmptyState(title: String, subtitle: String, modifier: Modifier = Modifier) {
     Column(
@@ -232,16 +233,10 @@ fun EmptyState(title: String, subtitle: String, modifier: Modifier = Modifier) {
         Spacer(Modifier.height(12.dp))
         Text(title, style = MaterialTheme.typography.titleLarge, color = TextHi, fontWeight = FontWeight.Bold)
         Spacer(Modifier.height(4.dp))
-        Text(
-            subtitle,
-            style = MaterialTheme.typography.bodyMedium,
-            color = TextMid,
-            textAlign = TextAlign.Center
-        )
+        Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = TextMid, textAlign = TextAlign.Center)
     }
 }
 
-// ─── Gradient Hero Card ────────────────────────────────────────────────────────
 @Composable
 fun HeroCard(
     title: String,
